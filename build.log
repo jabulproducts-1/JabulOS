@@ -1,0 +1,47 @@
+rm -rf build/initrd/*
+python3 tools/generate_wallpaper.py build/initrd/wallpaper.bmp assets/themes/AlanBliss.png
+python3 tools/generate_wallpaper.py build/initrd/boot-splash.bmp assets/boot-splash.jpg contain
+python3 tools/generate_wallpaper.py build/initrd/JabulSplash.bmp assets/JabulSplash.png contain 1920 1080
+python3 tools/generate_pe_sample.py build/initrd/pe-lab.exe
+wrote build/initrd/pe-lab.exe
+find assets -type f \( -iname '*.mp3' -o -iname '*.wav' -o -iname '*.flac' -o -iname '*.aac' -o -iname '*.ogg' -o -iname '*.m4a' \) -exec cp --parents -f {} build/initrd/ \;
+find assets -type f \( -iname '*.mp3' -o -iname '*.wav' -o -iname '*.flac' -o -iname '*.aac' -o -iname '*.ogg' -o -iname '*.m4a' \) -exec python3 tools/preprocess_audio.py {} . build/initrd --sample-rate 16000 \;
+audio preprocess: /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/assets/music/I was only there for you.mp3 -> /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/build/initrd/assets/music/I was only there for you.jba
+audio preprocess: /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/assets/music/Jabuls Story.mp3 -> /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/build/initrd/assets/music/Jabuls Story.jba
+audio preprocess: /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/assets/startup.wav -> /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/build/initrd/assets/startup.jba
+cd build/initrd && tar --format=ustar -cf ../initrd.tar *
+tar: background.bmp: File shrank by 1473078 bytes; padding with zeros
+rm -rf build/initrd/*
+python3 tools/generate_wallpaper.py build/initrd/wallpaper.bmp assets/themes/AlanBliss.png
+tar: themes: file changed as we read it
+tar: update.html: Cannot stat: No such file or directory
+tar: wallpaper.bmp: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors
+make: *** [Makefile:142: initrd] Error 2
+python3 tools/generate_wallpaper.py build/initrd/boot-splash.bmp assets/boot-splash.jpg contain
+python3 tools/generate_wallpaper.py build/initrd/JabulSplash.bmp assets/JabulSplash.png contain 1920 1080
+python3 tools/generate_pe_sample.py build/initrd/pe-lab.exe
+wrote build/initrd/pe-lab.exe
+find assets -type f \( -iname '*.mp3' -o -iname '*.wav' -o -iname '*.flac' -o -iname '*.aac' -o -iname '*.ogg' -o -iname '*.m4a' \) -exec cp --parents -f {} build/initrd/ \;
+find assets -type f \( -iname '*.mp3' -o -iname '*.wav' -o -iname '*.flac' -o -iname '*.aac' -o -iname '*.ogg' -o -iname '*.m4a' \) -exec python3 tools/preprocess_audio.py {} . build/initrd --sample-rate 16000 \;
+audio preprocess: /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/assets/music/I was only there for you.mp3 -> /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/build/initrd/assets/music/I was only there for you.jba
+audio preprocess: /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/assets/music/Jabuls Story.mp3 -> /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/build/initrd/assets/music/Jabuls Story.jba
+audio preprocess: /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/assets/startup.wav -> /mnt/c/Users/i use arch btw/Desktop/JabulOS Aero/build/initrd/assets/startup.jba
+cd build/initrd && tar --format=ustar -cf ../initrd.tar *
+grub-mkimage -O i386-pc-eltorito -o build/bios.img -p /boot/grub -c grub/bios-bootstrap.cfg \
+	biosdisk iso9660 normal configfile search search_fs_file multiboot2 font gfxterm all_video
+grub-mkstandalone -O x86_64-efi -o build/BOOTX64.EFI --locales="" --fonts="unicode" \
+	--modules="part_gpt part_msdos fat iso9660 normal configfile search search_fs_file multiboot2 font gfxterm all_video" \
+	"boot/grub/grub.cfg=grub/efi-bootstrap.cfg"
+rm -f build/efiboot.img
+dd if=/dev/zero of=build/efiboot.img bs=1M count=16
+16+0 records in
+16+0 records out
+16777216 bytes (17 MB, 16 MiB) copied, 0.126401 s, 133 MB/s
+mformat -i build/efiboot.img -F ::
+mmd -i build/efiboot.img ::/EFI ::/EFI/BOOT
+mcopy -i build/efiboot.img build/BOOTX64.EFI ::/EFI/BOOT/BOOTX64.EFI
+rm -rf build/iso
+cp build/kernel.elf build/iso/boot/kernel.elf
+cp: cannot stat 'build/kernel.elf': No such file or directory
+make: *** [Makefile:152: iso] Error 1
